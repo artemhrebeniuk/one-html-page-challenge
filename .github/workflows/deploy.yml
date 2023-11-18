@@ -1,0 +1,33 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+        with:
+          pages: github-pages
+          publish: true
+
+      - name: Build Pages
+        run: npm install && npm run build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pages-artifact
+          path: ./build
+
+      - uses: actions/deploy-pages@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          source: ./pages-artifact
+          destination: /
